@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <ros2_control name="GazeboSystem" type="system"> <!-- 定义硬件接口，包括机器人各个关节的命令和状态接口，这些接口是控制器与硬件（或仿真环境）交互的基础-->
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin> <!-- 实现了Gazebo仿真环境与ROS2 Control的连接，它不直接指定resource_manager的行为,但它提供了一个接口,让ROS2 Control能够与Gazebo中的模拟硬件交互-->
+        </hardware>
+        <joint name="left_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+        <joint name="right_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10</param>
+                <param name="max">10</param>
+            </command_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="position"/>
+        </joint>
+    </ros2_control>
+
+
+    <gazebo> <!-- 负责在Gazebo仿真环境中加载和配置特定的插件-->
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">  <!-- libgazebo_ros2_control.so插件用于在Gazebo中实现和运行ROS2控制框架, 使仿真环境中的机器人可以使用定义在<ros2_control>标签中的接口进行控制,实现ROS2 Control与Gazebo的集成-->
+            <parameters>$(find section3)/config/controllers.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <!-- 
+        总的来说,<ros2_control>标签定义了"什么"(硬件接口的结构),而<gazebo>标签定义了"如何"(如何在Gazebo中实现这些接口和控制)
+
+        当使用真实机器人环境而不是仿真环境时，你需要进行以下更改
+        去除 <gazebo> 标签
+        修改 <ros2_control> 标签
+        确保<ros2_control>标签中指定的硬件接口插件适用于真实硬件,可能需要你自己编写插件，或者使用机器人制造商提供的插件。
+        配置硬件接口插件:指定适用于你真实硬件的硬件接口插件，而不是用于Gazebo仿真的插件
+        仍然需要一个控制器配置文件（如my_controllers.yaml），该文件定义了控制器的参数
+        创建一个启动文件来加载URDF文件和控制器配置，并启动控制器管理器
+    -->
+</robot>

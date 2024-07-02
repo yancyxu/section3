@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <joint name="laser_joint" type="fixed">
+        <parent link="chassis_link" />
+        <child link="laser_link" />
+        <origin xyz="0.1 0 0.175"/>
+    </joint>
+
+    <link name="laser_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.05" length="0.05"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.05" length="0.05"/>
+            </geometry>
+            <material name="black"/>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" radius="0.05" length="0.05">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <gazebo reference="laser_link">  <!-- 要在Gazebo中模拟传感器，需要选择一个link来连接传感器，并在该链接 <gazebo> 的标签上添加一个 <sensor> 标签 -->
+        <material>Gazebo/Black</material>
+        <sensor name="laser" type="ray">
+            <pose> 0 0 0 0 0 0 </pose> <!-- 定义了相对于laser_link坐标系的位置和方向-->
+            <visualize>true</visualize> <!-- 定义了可视化蓝色的激光线条 -->
+            <update_rate>10</update_rate>
+            <ray> <!-- 模拟激光雷达参数-->
+                <scan>
+                    <horizontal>
+                        <samples>360</samples> <!-- 每次扫描360个采样点-->
+                        <min_angle>-3.14</min_angle> <!--定义扫描范围为整圆（-π到π弧度）-->
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.3</min>
+                    <max>12</max>
+                </range>
+            </ray>
+            <plugin name="laser_controller" filename="libgazebo_ros_ray_sensor.so"> <!-- 定义用于ROS接口的插件-->
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type> <!-- 指定输出消息类型-->
+                <frame_name>laser_link</frame_name> <!--指定激光数据的坐标系-->
+            </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>

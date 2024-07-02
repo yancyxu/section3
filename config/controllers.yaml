@@ -1,0 +1,68 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 30 # 控制器管理器的更新频率（30Hz）
+    use_sim_time: true # 使用仿真时间而不是实际时间
+
+    diff_cont: # 自定义名称，你可以根据需要更改
+      type: diff_drive_controller/DiffDriveController  # 类型对应于 ROS2 Control 中实际实现的控制器类，差分驱动机器人的控制器实现。
+
+    joint_broad: # 自定义名称
+      type: joint_state_broadcaster/JointStateBroadcaster # 这是用于发布关节状态信息的控制器实现。
+
+diff_cont:
+  ros__parameters:
+
+    publish_rate: 50.0 #发布频率
+
+    base_frame_id: base_link # 基础坐标系的名称
+
+    left_wheel_names: ['left_wheel_joint'] # 定义左右轮的关节名称
+    right_wheel_names: ['right_wheel_joint']
+    wheel_separation: 0.35 # 轮子间的距离
+    wheel_radius: 0.05 # 轮子半径
+
+    use_stamped_vel: false # 是否使用带时间戳的速度命令
+
+    # open_loop: false    
+
+    # wheels_per_side: x
+    # wheel_separation_multiplier: x
+    # left_wheel_radius_multiplier: x
+    # right_wheel_radius_multiplier: x
+
+    # odom_frame_id: x
+    # pose_covariance_diagonal: x
+    # twist_covariance_diagonal: x
+    # open_loop: x
+    # enable_odom_tf: x
+
+    # cmd_vel_timeout: x
+    # publish_limited_velocity: x
+    # velocity_rolling_window_size: x
+    
+
+    # linear.x.has_velocity_limits: false
+    # linear.x.has_acceleration_limits: false
+    # linear.x.has_jerk_limits: false
+    # linear.x.max_velocity: NAN
+    # linear.x.min_velocity: NAN
+    # linear.x.max_acceleration: NAN
+    # linear.x.min_acceleration: NAN
+    # linear.x.max_jerk: NAN
+    # linear.x.min_jerk: NAN
+
+    # angular.z.has_velocity_limits: false
+    # angular.z.has_acceleration_limits: false
+    # angular.z.has_jerk_limits: false
+    # angular.z.max_velocity: NAN
+    # angular.z.min_velocity: NAN
+    # angular.z.max_acceleration: NAN
+    # angular.z.min_acceleration: NAN
+    # angular.z.max_jerk: NAN
+    # angular.z.min_jerk: NAN
+
+
+
+
+# joint_broad:
+#   ros__parameters:
